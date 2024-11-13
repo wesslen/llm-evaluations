@@ -10,7 +10,7 @@
   - [Llama-index](https://docs.llamaindex.ai/en/stable/) and [DeepEval](https://docs.confident-ai.com/docs/getting-started)
 
 ## Vulnerability testing: Llama 3.1 8B Instruct endpoint with OpenAI Red Teaming
-- [Promptfoo Shared Link of Results](https://app.promptfoo.dev/eval/f:6c6726c5-a3ee-4409-88f3-23ef15b6f0d6)
+- [Promptfoo Shared Link of Results](https://app.promptfoo.dev/eval/f:fad4eb1a-cf22-4a1b-8227-ff59d9b1c5ed)
 - [README instructions](./security-testing/README.md)
 - Compared two prompts on 100 unit tests across five test plugins (PII, politics, off-topic) and one adversarial strategy
 - View [Red Team Report](security-testing/redteam.yaml) (YAML file).
