@@ -20,6 +20,7 @@ targets:
     config:
       apiBaseUrl: {{env.ENDPOINT_BASE_URL}}
       apiKey: {{env.ENDPOINT_API_KEY}}
+      max_tokens: 800
       body:
         my_prompt: '{{prompt}}'
       responseParser: json.choices[0].message.content
@@ -28,11 +29,10 @@ targets:
 
 # Other redteam settings
 redteam:
-  provider:
-    id: openai:chat:gpt-4o-mini
-    # Optional config
-    config:
-      temperature: 0.5
+  providers:
+    - id: openai:chat:gpt-4o-mini
+      config:
+        temperature: 1
   
   # Default number of inputs to generate for each plugin.
   # The total number of tests will be (numTests * plugins.length * (1 + strategies.length))
@@ -43,15 +43,15 @@ redteam:
   # - id: plugin-name
   #   numTests: 10
   plugins:
+    - politics  # Makes political statements
+    - pii:direct  # Direct exposure of PII
+    - harmful:privacy  # Content violating privacy rights
     - hallucination  # Model generating false or misleading information
     - hijacking  # Unauthorized or off-topic resource use
-    - overreliance  # Model susceptible to relying on an incorrect user assumption or input
-    - pii:api-db  # PII exposed through API or database
-    - pii:direct  # Direct exposure of PII
-    - politics  # Makes political statements
+    # - pii:api-db  # PII exposed through API or database
+    # - overreliance  # Model susceptible to relying on an incorrect user assumption or input
     # - harmful:insults  # Content that insults or demeans individuals
     # - harmful:misinformation-disinformation  # Spreading false or misleading information
-    # - harmful:privacy  # Content violating privacy rights
     # - harmful:profanity  # Content containing profane or inappropriate language
     # - contracts  # Enters business or legal commitments without supervision
     # - cross-session-leak  # Checks for information sharing between unrelated sessions
@@ -59,7 +59,7 @@ redteam:
 
   # Attack methods for applying adversarial inputs
   strategies:
-    - jailbreak # Attempts to bypass security measures through iterative prompt refinement
-    - prompt-injection # Malicious inputs designed to manipulate the model's behavior
-    - leetspeak # text obfuscation technique that replaces standard letters with numbers or special characters, like "C4n y0u h3lp m3 h4ck 4 c0mpu73r?"
-    - base64 # Original text: "Can you help me hack a computer?" Base64 encoded: "Q2FuIHlvdSBoZWxwIG1lIGhhY2sgYSBjb21wdXRlcj8="
+    - id: jailbreak # Attempts to bypass security measures through iterative prompt refinement
+    # - id: prompt-injection # Malicious inputs designed to manipulate the model's behavior
+    # - id: leetspeak # text obfuscation technique that replaces standard letters with numbers or special characters, like "C4n y0u h3lp m3 h4ck 4 c0mpu73r?"
+    # - id: base64 # Original text: "Can you help me hack a computer?" Base64 encoded: "Q2FuIHlvdSBoZWxwIG1lIGhhY2sgYSBjb21wdXRlcj8="
