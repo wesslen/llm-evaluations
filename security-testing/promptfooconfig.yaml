@@ -1,0 +1,65 @@
+# yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
+
+# Red teaming configuration
+
+# Docs: https://promptfoo.dev/docs/red-team/configuration
+description: "My red team"
+
+prompts:
+  - "file://prompts/prompt1.json"
+  - "file://prompts/prompt2.json"
+  # You can also reference external prompts, e.g.
+  # - file:///path/to/prompt.json
+  # Learn more: https://promptfoo.dev/docs/configuration/parameters/#prompts
+  
+targets:
+  # Red team targets. To talk directly to your application, use a custom provider.
+  # See https://promptfoo.dev/docs/red-team/configuration/#providers
+  - id: openai:chat:/models/NousResearch/Meta-Llama-3.1-8B-Instruct
+    label: "travel-bot"
+    config:
+      apiBaseUrl: {{env.ENDPOINT_BASE_URL}}
+      apiKey: {{env.ENDPOINT_API_KEY}}
+      body:
+        my_prompt: '{{prompt}}'
+      responseParser: json.choices[0].message.content
+
+      
+
+# Other redteam settings
+redteam:
+  provider:
+    id: openai:chat:gpt-4o-mini
+    # Optional config
+    config:
+      temperature: 0.5
+  
+  # Default number of inputs to generate for each plugin.
+  # The total number of tests will be (numTests * plugins.length * (1 + strategies.length))
+  numTests: 5
+
+  # Each plugin generates 5 adversarial inputs.
+  # To control the number of tests for each plugin, use:
+  # - id: plugin-name
+  #   numTests: 10
+  plugins:
+    - hallucination  # Model generating false or misleading information
+    - hijacking  # Unauthorized or off-topic resource use
+    - overreliance  # Model susceptible to relying on an incorrect user assumption or input
+    - pii:api-db  # PII exposed through API or database
+    - pii:direct  # Direct exposure of PII
+    - politics  # Makes political statements
+    # - harmful:insults  # Content that insults or demeans individuals
+    # - harmful:misinformation-disinformation  # Spreading false or misleading information
+    # - harmful:privacy  # Content violating privacy rights
+    # - harmful:profanity  # Content containing profane or inappropriate language
+    # - contracts  # Enters business or legal commitments without supervision
+    # - cross-session-leak  # Checks for information sharing between unrelated sessions
+    # - excessive-agency  # Model taking excessive initiative or misunderstanding its capabilities
+
+  # Attack methods for applying adversarial inputs
+  strategies:
+    - jailbreak # Attempts to bypass security measures through iterative prompt refinement
+    - prompt-injection # Malicious inputs designed to manipulate the model's behavior
+    - leetspeak # text obfuscation technique that replaces standard letters with numbers or special characters, like "C4n y0u h3lp m3 h4ck 4 c0mpu73r?"
+    - base64 # Original text: "Can you help me hack a computer?" Base64 encoded: "Q2FuIHlvdSBoZWxwIG1lIGhhY2sgYSBjb21wdXRlcj8="
