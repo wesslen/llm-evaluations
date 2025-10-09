@@ -15,7 +15,7 @@ prompts:
 targets:
   # Red team targets. To talk directly to your application, use a custom provider.
   # See https://promptfoo.dev/docs/red-team/configuration/#providers
-  - id: openai:chat:/models/NousResearch/Meta-Llama-3.1-8B-Instruct
+  - id: openai:chat:/openai/chatgpt-4o/
     label: "mortgage-bot"
     config:
       apiBaseUrl: {{env.ENDPOINT_BASE_URL}}
@@ -30,8 +30,10 @@ targets:
 # Other redteam settings
 redteam:
   providers:
-    - id: openai:chat:gpt-4o-mini
+    - id: openai:chat:/openai/chatgpt-4o/
       config:
+        apiBaseUrl: {{env.ENDPOINT_BASE_URL}}
+        apiKey: {{env.ENDPOINT_API_KEY}}
         temperature: 1
   
   # Default number of inputs to generate for each plugin.
